@@ -6,8 +6,7 @@ import pipes
 import platform
 import re
 import subprocess
-
-from ffprobe3.exceptions import FFProbeError
+from urllib.parse import urlparse
 
 
 class FFProbe:
@@ -21,9 +20,9 @@ class FFProbe:
         try:
             with open(os.devnull, 'w') as tempf:
                 subprocess.check_call(["ffprobe", "-h"], stdout=tempf, stderr=tempf)
-        except:
+        except Exception:
             raise IOError('ffprobe not found.')
-        if os.path.isfile(video_file):
+        if os.path.isfile(video_file) or is_url(video_file):
             if str(platform.system()) == 'Windows':
                 cmd = ["ffprobe", "-show_streams", self.video_file]
             else:
@@ -57,8 +56,12 @@ class FFProbe:
                     data_lines = []
                 else:
                     data_lines.append(a)
+            p.communicate()
             p.stdout.close()
             p.stderr.close()
+            if p.returncode != 0:
+                raise IOError('Cannot access media file/url: ' + video_file)
+
             for a in self.streams:
                 if a.is_audio():
                     self.audio.append(a)
@@ -75,9 +78,9 @@ class FFStream:
 
     def __init__(self, data_lines):
         for a in data_lines:
-            kvPair = a.strip().split('=')
-            if len(kvPair) > 1 :
-                self.__dict__[kvPair[0]] = kvPair[1]
+            kv_pair = a.strip().split('=')
+            if len(kv_pair) > 1:
+                self.__dict__[kv_pair[0]] = kv_pair[1]
 
     def is_audio(self):
         """
@@ -211,3 +214,21 @@ class FFStream:
             except ValueError:
                 raise FFProbeError('None integer bit_rate')
         return b
+
+
+class FFProbeError(Exception):
+    pass
+
+
+def is_url(url: str) -> bool:
+    """
+    Parse and check if URL is valid
+    :param url: Url to a video file
+    :type url: str
+    :return: bool
+    """
+    try:
+        result = urlparse(url)
+        return all([result.scheme, result.netloc])
+    except ValueError:
+        return False

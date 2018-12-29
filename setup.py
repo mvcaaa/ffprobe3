@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name='ffprobe3',
-    version='0.2.0',
+    version='0.2.1',
     description="""
     Original Project: ffprobe (https://pypi.python.org/pypi/ffprobe)
 
