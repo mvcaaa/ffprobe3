@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name='ffprobe3',
-    version='0.1.2',
+    version='0.2.0',
     description="""
     Original Project: ffprobe (https://pypi.python.org/pypi/ffprobe)
 
@@ -14,9 +14,9 @@ setup(
     """,
     author='Simon Hargreaves',
     author_email='simon@simon-hargreaves.com',
-    maintainer='Dheerendra Rathor',
-    maintainer_email='dheeru.rathor14@gmail.com',
-    url='https://github.com/DheerendraRathor/ffprobe3',
+    maintainer='Andrey Astashov',
+    maintainer_email='mvc.aaa@gmail.com',
+    url='https://github.com/mvcaaa/ffprobe3',
     packages=['ffprobe3'],
     keywords='ffmpeg, ffprobe, mpeg, mp4',
     classifiers=[
