@@ -37,6 +37,8 @@ class FFProbe:
             self.streams = []
             self.video = []
             self.audio = []
+            self.is_video = False
+            self.is_audio = False
             data_lines = []
             for a in iter(p.stdout.readline, b''):
                 a = a.decode('UTF-8')
@@ -65,8 +67,10 @@ class FFProbe:
             for a in self.streams:
                 if a.is_audio():
                     self.audio.append(a)
+                    self.is_audio = True
                 if a.is_video():
                     self.video.append(a)
+                    self.is_video = True
         else:
             raise IOError('No such media file ' + video_file)
 
